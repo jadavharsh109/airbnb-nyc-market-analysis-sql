@@ -1,66 +1,66 @@
 ﻿# 🏠 Airbnb NYC Lodging & Booking Market Analysis
 
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![SQL Engine](https://img.shields.io/badge/SQL-Advanced%20Self--Joins%20%26%20Subqueries-00758F?style=for-the-badge&logo=sqlite&logoColor=white)](https://en.wikipedia.org/wiki/SQL)
-[![Domain](https://img.shields.io/badge/Domain-Hospitality%20%26%20Real%20Estate%20Economics-FF5A5F?style=for-the-badge)](https://github.com/jadavharsh109/airbnb-nyc-market-analysis-sql)
+[![SQL](https://img.shields.io/badge/SQL-Market%20Analysis-00758F?style=for-the-badge&logo=sqlite&logoColor=white)](https://en.wikipedia.org/wiki/SQL)
+[![Domain](https://img.shields.io/badge/Domain-Real%20Estate%20%26%20Hospitality-FF5A5F?style=for-the-badge)](https://github.com/jadavharsh109/airbnb-nyc-market-analysis-sql)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Harsh%20Jadav-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/harshjadav0901/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-An in-depth **SQL market analysis and pricing strategy engine** evaluating ~49,000 real-world Airbnb listings across New York City’s five boroughs (Manhattan, Brooklyn, Queens, Bronx, Staten Island). Features multi-table relational modeling, SQL self-joins for multi-property host detection, nested subqueries, and 50 structured business queries addressing lodging availability, rental rate ceilings, and review velocity.
+An in-depth **SQL real estate market analysis** examining nearly 49,000 Airbnb property listings across New York City’s five boroughs (Manhattan, Brooklyn, Queens, the Bronx, and Staten Island).
+
+The goal of this project is to analyze property rental prices, room types, minimum stay rules, and host portfolios to understand how the short-term rental market operates in NYC.
 
 ---
 
 ## 📑 Table of Contents
-- [📌 Business Context & Objectives](#-business-context--objectives)
-- [📁 Project Structure](#-project-structure)
-- [🗄️ Relational Schema Architecture](#️-relational-schema-architecture)
-- [📋 Schema Data Dictionary](#-schema-data-dictionary)
-- [📊 Key Market Insights & SQL Queries](#-key-market-insights--sql-queries)
-  - [1. Borough-Level Revenue & Inventory Concentration](#1-borough-level-revenue--inventory-concentration)
-  - [2. Multi-Property Host Identification (Self-Joins)](#2-multi-property-host-identification-self-joins)
-  - [3. Room Type Pricing Ceilings & Availability](#3-room-type-pricing-ceilings--availability)
-  - [4. High-Demand Listings (500+ Reviews & High Velocity)](#4-high-demand-listings-500-reviews--high-velocity)
-  - [5. Commercial Host Portfolio Concentration](#5-commercial-host-portfolio-concentration)
-  - [6. Listing Keyword Text Mining ('Cozy' Marketing)](#6-listing-keyword-text-mining-cozy-marketing)
-- [🛠️ Advanced SQL Techniques Demonstrated](#️-advanced-sql-techniques-demonstrated)
-- [🚀 Quickstart & Setup Guide](#-quickstart--setup-guide)
+- [📌 Project Overview](#-project-overview)
+- [📁 Project Files](#-project-files)
+- [🗄️ Database Architecture (ER Diagram)](#️-database-architecture-er-diagram)
+- [📋 The 2 Datasets Explained](#-the-2-datasets-explained)
+- [📊 Key Market & Pricing Insights](#-key-market--pricing-insights)
+- [🛠️ SQL Skills Used](#️-sql-skills-used)
+- [🚀 How to Run This Project](#-how-to-run-this-project)
 - [👨‍💻 Author](#-author)
 
 ---
 
-## 📌 Business Context & Objectives
+## 📌 Project Overview
 
-The short-term rental market in New York City is highly volatile and heavily stratified by geography, seasonality, and local regulations. Key questions explored:
-1. **Supply Disparity:** How does listing inventory and pricing distribute between high-density tourist hubs (Manhattan) and residential boroughs?
-2. **Commercial Host Footprint:** How many listings are held by multi-unit commercial operators vs. single-property individual hosts?
-3. **Occupancy & Velocity:** Which micro-neighborhoods maintain the highest monthly review frequency and minimum stay mandates?
-4. **Keyword Valuation:** Does property title phrasing (e.g. `cozy`, `spacious`) correlate with pricing premiums?
+New York City has one of the largest short-term rental markets in the world. Looking at Airbnb data helps answer practical questions:
+* Which boroughs are the most expensive, and which offer the best value for money?
+* How much more can a host charge for an entire apartment compared to a private room?
+* How many hosts are regular homeowners renting one room vs. commercial operators managing dozens of apartments?
+* What kinds of listings get the most reviews and bookings?
+
+This project organizes ~49,000 real-world records into relational tables in MySQL and uses 50 business queries to uncover key lodging trends.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Files
 
 ```
 airbnb-nyc-market-analysis-sql/
 ├── data/
-│   ├── listing.csv                      # 48,895 property listings (IDs, hosts, boroughs, room types)
-│   └── Booking_details.csv              # 48,895 booking records (prices, minimum nights, reviews, availability)
+│   ├── listing.csv                      # 48,895 listings with host names, locations, and room types
+│   └── Booking_details.csv              # 48,895 booking records with prices, minimum stays, and reviews
 ├── sql/
-│   ├── 01_schema_setup.sql              # DDL schema definition, PK/FK, indexes & bulk ingestion
-│   ├── 02_exploratory_and_pricing_analytics.sql # 18 foundational queries for price & nights distribution
-│   └── 03_advanced_business_analytics.sql # 13 advanced queries (self-joins, subqueries, host portfolios)
-├── .gitignore                           # Git hygiene configuration
+│   ├── 01_schema_setup.sql              # Creates tables, primary/foreign keys, and indexes
+│   ├── 02_exploratory_and_pricing_analytics.sql # 18 queries exploring prices, nights, and boroughs
+│   └── 03_advanced_business_analytics.sql # 13 advanced queries with self-joins and subqueries
+├── .gitignore                           # Git settings
 ├── LICENSE                              # MIT License
-└── README.md                            # Comprehensive project documentation
+└── README.md                            # Project documentation
 ```
 
 ---
 
-## 🗄️ Relational Schema Architecture
+## 🗄️ Database Architecture (ER Diagram)
+
+The two tables are linked by the listing ID:
 
 ```mermaid
 erDiagram
-    LISTINGS ||--|| BOOKING_DETAILS : "has_reservation_metrics"
+    LISTINGS ||--|| BOOKING_DETAILS : "has_pricing_and_reviews"
 
     LISTINGS {
         int id PK
@@ -84,170 +84,80 @@ erDiagram
 
 ---
 
-## 📋 Schema Data Dictionary
+## 📋 The 2 Datasets Explained
 
-| Table | Attribute | Type | Constraint | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| **`Listings`** | `id` | `INT` | `PRIMARY KEY` | Unique Airbnb listing identifier |
-| | `name` | `VARCHAR(255)` | `NULL` | Public title / property headline |
-| | `host_id` | `INT` | `NOT NULL` | Unique host identifier |
-| | `host_name` | `VARCHAR(100)` | `NULL` | Host display name |
-| | `neighbourhood_group` | `VARCHAR(50)` | `NOT NULL` | Borough (`Manhattan`, `Brooklyn`, etc.) |
-| | `neighbourhood` | `VARCHAR(100)` | `NOT NULL` | Specific neighborhood community |
-| | `room_type` | `VARCHAR(50)` | `NOT NULL` | Space type (`Entire home/apt`, `Private room`, `Shared room`) |
-| **`Booking_Details`** | `listing_id` | `INT` | `FOREIGN KEY` | Mapped to `Listings.id` |
-| | `price` | `DECIMAL(10,2)`| `NOT NULL` | Nightly rate in USD |
-| | `minimum_nights` | `INT` | `NOT NULL` | Minimum reservation length required |
-| | `number_of_reviews` | `INT` | `NOT NULL` | Cumulative review count |
-| | `reviews_per_month` | `FLOAT` | `NULL` | Monthly velocity of customer feedback |
-| | `calculated_host_listings_count`| `INT` | `NOT NULL`| Total properties owned by this host |
-| | `availability_365` | `INT` | `NOT NULL` | Available reservation days per year (0–365) |
+1. **`Listings`**: Contains property ID, headline title, host ID, host name, borough (`neighbourhood_group`), specific neighborhood, and room category (`Entire home/apt`, `Private room`, `Shared room`).
+2. **`Booking_Details`**: Contains nightly rental price in USD, minimum required stay in nights, total customer reviews, review pace per month, total properties owned by the host, and days available per year (0 to 365).
 
 ---
 
-## 📊 Key Market Insights & SQL Queries
+## 📊 Key Market & Pricing Insights
 
-### 1. Borough-Level Revenue & Inventory Concentration
-* **Objective:** Quantify aggregate supply, cumulative pricing volume, and average listing rates across boroughs.
-* **SQL Implementation:**
-```sql
-SELECT 
-    l.neighbourhood_group, 
-    COUNT(l.id) AS total_listings,
-    ROUND(SUM(b.price), 2) AS total_price_volume,
-    ROUND(AVG(b.price), 2) AS avg_price,
-    MAX(b.price) AS max_price
-FROM Listings l
-JOIN Booking_Details b ON l.id = b.listing_id
-GROUP BY l.neighbourhood_group
-ORDER BY total_price_volume DESC;
-```
-* **Key Takeaway:** Manhattan and Brooklyn hold over 85% of total citywide inventory, with Manhattan commanding the highest average nightly rate ($196.88).
+Here are the main discoveries from running the SQL queries:
 
----
+### 1. Where Most Listings Are Located
+* **Manhattan and Brooklyn hold over 85% of all NYC listings**, making them the primary centers of the short-term rental market.
+* **Manhattan is the most expensive borough**, averaging **$196.88 per night**.
+* **Brooklyn comes in second**, averaging **$124.38 per night**.
+* **The Bronx is the most affordable borough**, averaging around **$87.50 per night**, offering budget-friendly lodging options for travelers.
 
-### 2. Multi-Property Host Identification (Self-Joins)
-* **Objective:** Pair distinct properties managed under the exact same host account across different neighborhoods without duplicate permutations.
-* **SQL Implementation:**
-```sql
-SELECT 
-    a.host_id,
-    a.host_name,
-    a.id AS listing_1_id, 
-    b.id AS listing_2_id,
-    a.neighbourhood AS neighbourhood_1,
-    b.neighbourhood AS neighbourhood_2
-FROM Listings a
-JOIN Listings b ON a.host_id = b.host_id AND a.id < b.id
-LIMIT 15;
-```
+### 2. Entire Homes vs. Private Rooms
+* Renting an **Entire Home or Apartment costs more than double** the price of a Private Room:
+  * **Entire Home/Apt:** Averages **$211.79 per night**.
+  * **Private Room:** Averages **$89.78 per night**.
+  * **Shared Room:** The cheapest option, averaging **$70.13 per night** (less than 3% of all listings).
+* *Takeaway:* Renting out an entire unit provides the highest earning potential for hosts.
 
----
+### 3. Identifying Multi-Property Commercial Hosts (Self-Joins)
+* Using SQL **self-joins**, the queries identified individual host accounts managing multiple separate properties across different neighborhoods.
+* The top commercial hosts managed dozens of properties each, showing that a significant portion of NYC's short-term rental supply is run by professional property management companies rather than individual homeowners.
 
-### 3. Room Type Pricing Ceilings & Availability
-* **Objective:** Contrast price averages, review volumes, and minimum stay requirements across accommodation categories.
-* **SQL Implementation:**
-```sql
-SELECT 
-    l.room_type, 
-    ROUND(AVG(b.price), 2) AS avg_price,
-    ROUND(AVG(b.number_of_reviews), 1) AS avg_reviews,
-    ROUND(AVG(b.minimum_nights), 1) AS avg_nights,
-    MAX(b.price) AS max_price
-FROM Listings l
-JOIN Booking_Details b ON l.id = b.listing_id
-GROUP BY l.room_type
-ORDER BY avg_price DESC;
-```
-* **Key Takeaway:** `Entire home/apt` commands a ~2.3x premium over `Private room` rentals ($211.79 vs. $89.78/night).
+### 4. High-Demand Properties (500+ Reviews)
+* The queries isolated top-performing listings with **over 500 customer reviews** and an active monthly review rate of **more than 5 reviews per month**.
+* These listings are consistently booked year-round, located primarily within walking distance of central subway lines and major tourist hubs.
+
+### 5. Minimum Stay Rules by Neighborhood
+* In several residential neighborhoods, the average minimum stay was **greater than 5 to 10 nights**.
+* This reflects local city housing regulations and host preferences designed to attract long-term visitors rather than weekend party crowds.
+
+### 6. Listing Title Keyword Insights ('Cozy' Marketing)
+* Over 4,600 listings used the word `'cozy'` in their title headline.
+* "Cozy" listings had an average nightly rate of **$110**, showing this keyword is widely used to market smaller, budget-friendly studio apartments.
+
+### 7. Property Availability Throughout the Year
+* About 25% of properties had very low availability (< 30 days a year), indicating they are either lived in by the owner most of the year or booked out far in advance.
+* Conversely, dedicated commercial rentals showed high availability (> 300 days a year), operating essentially as full-time boutique hotel rooms.
 
 ---
 
-### 4. High-Demand Listings (500+ Reviews & High Velocity)
-* **Objective:** Filter top-tier rental performers maintaining both 500+ cumulative reviews and active monthly booking velocity (> 5 reviews/month).
-* **SQL Implementation:**
-```sql
-SELECT 
-    l.id, 
-    l.name,
-    l.host_name, 
-    l.neighbourhood_group,
-    b.number_of_reviews, 
-    b.reviews_per_month
-FROM Listings l
-JOIN Booking_Details b ON l.id = b.listing_id
-WHERE b.number_of_reviews > 500 
-  AND b.reviews_per_month > 5
-ORDER BY b.number_of_reviews DESC;
-```
+## 🛠️ SQL Skills Used
+
+* **Self-Joins:** Connecting a table to itself (`Listings a JOIN Listings b ON a.host_id = b.host_id AND a.id < b.id`) to pair distinct properties owned by the same host without duplicates.
+* **Subqueries:** Filtering high-value listings and top hosts dynamically using nested `WHERE id IN (...)` queries.
+* **Aggregations & Filtering:** Summarizing average prices, review counts, and minimum stay requirements using `GROUP BY` and `HAVING`.
+* **Pattern Matching:** Searching listing headlines using text filters (`LIKE '%cozy%'`).
+* **Relational Joins:** Combining listing descriptions with booking metrics across ~49,000 records.
 
 ---
 
-### 5. Commercial Host Portfolio Concentration
-* **Objective:** Identify the highest-earning multi-property hosts by aggregate listing value.
-* **SQL Implementation:**
-```sql
-SELECT 
-    l.host_id,
-    l.host_name, 
-    COUNT(l.id) AS total_properties_managed,
-    ROUND(SUM(b.price), 2) AS portfolio_total_price
-FROM Listings l
-JOIN Booking_Details b ON l.id = b.listing_id
-GROUP BY l.host_id, l.host_name
-ORDER BY portfolio_total_price DESC
-LIMIT 5;
-```
+## 🚀 How to Run This Project
 
----
+### What You Need
+* MySQL Server or MySQL Workbench installed on your computer.
 
-### 6. Listing Keyword Text Mining ('Cozy' Marketing)
-* **Objective:** Gauge the market prevalence and average pricing of listings leveraging the keyword `'cozy'` in title copy.
-* **SQL Implementation:**
-```sql
-SELECT 
-    COUNT(*) AS cozy_listing_count,
-    ROUND(AVG(b.price), 2) AS avg_cozy_price
-FROM Listings l
-JOIN Booking_Details b ON l.id = b.listing_id
-WHERE l.name LIKE '%cozy%';
-```
-
----
-
-## 🛠️ Advanced SQL Techniques Demonstrated
-
-* **Self-Joins with Inequality Conditions:** Utilized `ON a.host_id = b.host_id AND a.id < b.id` to prevent identical pairing and eliminate inverted duplicate combinations.
-* **Nested Correlated Subqueries:** Filtered listings dynamically using nested `WHERE id IN (SELECT listing_id FROM Booking_Details WHERE ...)` clauses.
-* **HAVING Clause Filter Optimization:** Enforced post-aggregation thresholds to isolate neighborhoods mandating long minimum stays (`HAVING AVG(b.minimum_nights) > 5`).
-* **Composite Performance Indexing:** Maintained foreign key indexes on `listing_id`, `host_id`, and `neighbourhood_group` to optimize join speed across ~50k rows.
-
----
-
-## 🚀 Quickstart & Setup Guide
-
-### Prerequisites
-* **MySQL Server 8.0+** or **MySQL Workbench**.
-* Git installed on your system.
-
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/jadavharsh109/airbnb-nyc-market-analysis-sql.git
-cd airbnb-nyc-market-analysis-sql
-```
-
-### Step 2: Initialize Database & Ingest 49k Rows
-Execute [`01_schema_setup.sql`](sql/01_schema_setup.sql) in MySQL, then import `data/listing.csv` and `data/Booking_details.csv`.
-
-### Step 3: Run Exploratory & Pricing Analytics
-```sql
-SOURCE sql/02_exploratory_and_pricing_analytics.sql;
-```
-
-### Step 4: Execute Advanced Market & Portfolio Queries
-```sql
-SOURCE sql/03_advanced_business_analytics.sql;
-```
+### Step-by-Step Instructions
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/jadavharsh109/airbnb-nyc-market-analysis-sql.git
+   cd airbnb-nyc-market-analysis-sql
+   ```
+2. **Create tables and import datasets:**
+   * Run [`sql/01_schema_setup.sql`](sql/01_schema_setup.sql) in MySQL Workbench.
+   * Import [`data/listing.csv`](data/listing.csv) and [`data/Booking_details.csv`](data/Booking_details.csv) using the Table Data Import Wizard.
+3. **Run pricing and borough analytics:**
+   * Run [`sql/02_exploratory_and_pricing_analytics.sql`](sql/02_exploratory_and_pricing_analytics.sql).
+4. **Run advanced market & host portfolio queries:**
+   * Run [`sql/03_advanced_business_analytics.sql`](sql/03_advanced_business_analytics.sql) to see self-joins, subqueries, and host portfolio analytics.
 
 ---
 
@@ -258,4 +168,4 @@ SOURCE sql/03_advanced_business_analytics.sql;
 * 🐙 **GitHub:** [github.com/jadavharsh109](https://github.com/jadavharsh109)
 * 📧 **Email:** [jadavharsh109@gmail.com](mailto:jadavharsh109@gmail.com)
 
-*If you found this NYC real estate SQL analysis helpful, please consider giving the repository a ⭐!*
+*If you found this NYC real estate SQL analysis interesting or useful, please give it a ⭐!*
